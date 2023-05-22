@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- use thymeleaf syntax to access css file, @ is used to denote path-->
+    <link rel="stylesheet" th:href="@{/styles/Morpeko.css}">
+    <title>Morpeko Shrine</title>
+</head>
+<body>
+    <h1 class="h1">My Morpeko Shrine</h1>
+
+    <h1>LOOK AT MORPEKO ISNT IT CUTE???</h1>
+    <img src="/images/morpeko-pokemon.gif" alt="peko">
+    <div>
+        <h3>How many types of food would you like to generate for Morpeko?</h3>
+        <!-- action: takes in a url (Where to send the form-data when the form is submitted)-->
+        <!-- method-get: http method. Appends form-data into the URL in name/value pairs, has character limit-->
+        <!-- method-post: http method. 	Sends the form-data as an HTTP post transaction, no limit-->
+        <form action="/getfood" method="get">
+            <input type = "input" id= "number" name = "number">
+            <input type="submit" value="Generate">
+        </form>
+        <!-- Using thymeleaf syntax, if there is an error message generated, the error message will be generated-->
+        <p th:if="${errorMessage != null}" class="error">[[${errorMessage}]]</p>
+        <p th:if="${negativeFood != null}" class="error">[[${negativeFood}]]</p>
+    </div>
+</body>
+</html>

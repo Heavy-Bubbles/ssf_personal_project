@@ -1,0 +1,12 @@
+.h1{
+    color: darkmagenta;
+    font-size: 3em;
+    background-color: darkkhaki;
+    text-shadow: 5px 5px 5px grey;
+    padding: 15px;
+}
+
+.error{
+    color: red;
+}
+

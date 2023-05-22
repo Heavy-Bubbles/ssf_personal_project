@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" th:href="@{/styles/displayfood.css}">
+    <title>Display Food</title>
+</head>
+<body>
+    <a href="/">Back To The Shrine</a> 
+    <!-- can add ? after finalFood to cover for null cases (will only display if not null)-->
+    <h1> Your list of <label th:text="${finalFood.size()}"></label> food(s) for Morpeko: </h1> 
+    
+    <!--check if imagageList is not null -->
+    <div th:if="${not #lists.isEmpty(finalFood)}" >
+
+    <!-- ieteraring image list and loading each image -->
+        <div th:each="image: ${finalFood}">
+    
+            <!-- print image name -->
+            <p th:text = "${image.name}"></p>
+            <!-- source from image path-->
+            <img width = "100" th:src="@{${image.path}}" />
+            <br>
+    
+        </div>
+    
+    
+    </div>
+    
+    <h1>Morpeko is satisfied!</h1>
+    <img src="/images/morpeko-full.gif" alt="full belly">
+</body>
+</body>
+</html>
