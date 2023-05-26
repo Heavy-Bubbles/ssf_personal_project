@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Donations</title>
+</head>
+<body>
+    <a href="/">Back To The Shrine</a>
+    <h1>List of Donations:</h1>
+    <!-- iterate through donations and display them-->
+    <tr th:each="donation : ${donations}">
+        <td>
+            <a data-th-href = "@{'/showdonation/' + ${donation.id}}" data-th-text="${donation.id}"></a>
+            <br>
+        </td>
+    </tr>
+</body>
+</html>

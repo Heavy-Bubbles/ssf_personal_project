@@ -5,13 +5,21 @@ package tan.chelsea.ssf_personal_project.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
+import tan.chelsea.ssf_personal_project.model.Contact;
 import tan.chelsea.ssf_personal_project.model.FoodImage;
+import tan.chelsea.ssf_personal_project.repository.ContactRedis;
 import tan.chelsea.ssf_personal_project.service.RandomFoodGenerator;
 
 // denotes that this class is a controller 
@@ -23,8 +31,14 @@ public class PekoController {
     @Autowired
     RandomFoodGenerator randomFoodGeneratorService;
 
+    // inject redis
+    @Autowired
+    ContactRedis repository;
+
     @GetMapping
-    public String getHomePage(){
+    public String getHomePage(Model model){
+        // bind form to model
+        model.addAttribute("contact", new Contact());
         // return morpeko.html template
         return "morpeko";
     }
@@ -83,5 +97,55 @@ public class PekoController {
 
     }
 
-    
+    // submit donation information
+    @PostMapping ("/donate")
+    // @Valid for syntactic validation - Validate the data capture from the form by the model
+    // BindingResult contains the validation results
+    public String submitDonation(@Valid Contact contact, BindingResult bindingResult, Model model){
+
+
+         // If there are validation errors, return to form and report errors
+         if (bindingResult.hasErrors()){
+            return "morpeko";
+        }
+
+        // check for other errors
+        // custom data validation for semantic error (checking if email already exists)
+        // can add multiple errors with the same name (err)
+        if(!repository.isUniqueEmail(contact.getEmail())){
+            ObjectError err = new ObjectError("globalError", "%s is already in use!".formatted(contact.getEmail()));
+            bindingResult.addError(err);
+            return "morpeko";
+        }
+
+        // save contact to redis 
+        repository.saveContact(contact, model);
+        // success message
+        model.addAttribute("successMessage", "Donation saved successfully, with status code: " + HttpStatus.CREATED + ".");
+        return "showdonation";
+    }
+
+    // show contact by inputting ID
+    @GetMapping("/showdonation/{contactID}")
+    public String getContactByID(Model model, @PathVariable String contactID){
+        Contact contact = new Contact();
+        // search for contact by id in redis
+        contact = repository.getContactbyId(contactID);
+        if (contact == null){
+            model.addAttribute("noContact", "Contact not found!");
+            return "error";
+        }
+        model.addAttribute("contact", contact);
+        return "showdonation";
+    }
+
+    // show all contacts in redis
+    @GetMapping(path = "/list")
+    public String getAllDonations(Model model){
+        List<Contact> donations = repository.getAllContacts();
+        System.out.println(donations);
+        model.addAttribute("donations", donations);
+        return "donations";
+    }
+
 }

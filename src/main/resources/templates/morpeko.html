@@ -26,5 +26,54 @@
         <p th:if="${errorMessage != null}" class="error">[[${errorMessage}]]</p>
         <p th:if="${negativeFood != null}" class="error">[[${negativeFood}]]</p>
     </div>
+    <div>
+        <h3>Donate money to Morpeko so it can buy food!</h3>
+        <form data-th-action="@{/donate}" data-th-object="${contact}" method="post">
+            <p>
+                Name:
+                <input type="text" data-th-field="*{name}">
+                <br>
+                <!-- can use class or data-th-errorclass to show css -->
+                <span data-th-errorclass="error" data-th-if="${#fields.hasErrors('name')}" data-th-errors="*{name}"></span>
+            </p>
+            <br>
+            <p>
+                Email: 
+                <input type="text" data-th-field="*{email}">
+                <br>
+                <span data-th-errorclass="error" data-th-if="${#fields.hasErrors('email')}" data-th-errors="*{email}"></span>
+            </p>
+            <br>
+            <p>
+                Phone Number:
+                <input type="text" data-th-field="*{phoneNumber}">
+                <br>
+                <span data-th-errorclass="error" data-th-if="${#fields.hasErrors('phoneNumber')}" data-th-errors="*{phoneNumber}"></span>
+            </p>
+            <br>
+            <p>
+                Date Of Birth:
+                <input type="date" data-th-field="*{dateOfBirth}">
+                <br>
+                <span data-th-errorclass="error" data-th-if="${#fields.hasErrors('dateOfBirth')}" data-th-errors="*{dateOfBirth}"></span>
+                <br>
+                <span data-th-errorclass="error" data-th-if="${#fields.hasErrors('age')}" data-th-errors="*{age}"></span>
+            </p>
+            <br>
+            <p>
+                Donation Amount ($):
+                <input type="number" data-th-field="*{donation}">
+                <br>
+                <span data-th-errorclass="error" data-th-if="${#fields.hasErrors('donation')}" data-th-errors="*{donation}"></span>
+            </p>
+            <br>
+            <!-- semantic error display -->
+            <div data-th-if = "${#fields.hasErrors('global')}">
+                <p data-th-each="err: ${#fields.errors('global')}" data-th-text="${err}" class="error">
+                </p>
+            </div>
+                <input type="submit" value="Donate Now!">
+        </form>
+    </div>
 </body>
 </html>
